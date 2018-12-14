@@ -1,0 +1,7 @@
+D:\projekty\BinaryDecisionDiagram\BinaryDecisionDiagram\bin\Debug\BinaryDecisionDiagram.exe.config
+D:\projekty\BinaryDecisionDiagram\BinaryDecisionDiagram\bin\Debug\BinaryDecisionDiagram.exe
+D:\projekty\BinaryDecisionDiagram\BinaryDecisionDiagram\bin\Debug\BinaryDecisionDiagram.pdb
+D:\projekty\BinaryDecisionDiagram\BinaryDecisionDiagram\obj\Debug\BinaryDecisionDiagram.csprojAssemblyReference.cache
+D:\projekty\BinaryDecisionDiagram\BinaryDecisionDiagram\obj\Debug\BinaryDecisionDiagram.csproj.CoreCompileInputs.cache
+D:\projekty\BinaryDecisionDiagram\BinaryDecisionDiagram\obj\Debug\BinaryDecisionDiagram.exe
+D:\projekty\BinaryDecisionDiagram\BinaryDecisionDiagram\obj\Debug\BinaryDecisionDiagram.pdb

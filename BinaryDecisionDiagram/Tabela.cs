@@ -13,7 +13,8 @@ namespace BinaryDecisionDiagram
         int columns = 288, rows = 20;
         public int[,] tabelka;
         public int[] conditionNumbers;
-
+        public string[] tracking = new string[] { "Tow.TAK: ", "Tow.NIE: ", "SLONCE: ", "DESZCZ: ", "SNIEG: ", "SLABA: ", "SREDNIA: ", "DOBRA: ", "temp <-10: ", "temp -10-10: ", "temp 10-20: ", "temp >20: ", "wiek <10: ", "wiek 10-18: ", "wiek 18-40: ", "wiek >40: ", "CZERWONY: ", "NIEBIESKI: ", "ZIELONY: ", "CZARNY: " };
+        public string trackingData;
         public int n, n1, n2, n3, n4;
         public double I;
         
@@ -23,10 +24,11 @@ namespace BinaryDecisionDiagram
 
         }
 
-        public Tabela(int cols, int [,] values)
+        public Tabela(int cols, int [,] values, string trackingData)
         {
             columns = cols;
             tabelka = new int[rows, columns];
+            this.trackingData = trackingData;
 
             if (values.Length != tabelka.Length)
             {
@@ -157,8 +159,11 @@ namespace BinaryDecisionDiagram
 
             if (maxValue == 0)
             {
-                pivot = 2;  
+                pivot = 2;
+
             }
+
+            
 
             for (int i = 0; i < columns; i++)//ten for jest tu tylko po to, zeby policzyc ile jest kolumn z wartoscia 1 dla wybranego warunku (zeby zadeklarowac tablice o odpowiednim rozmiarze tuz ponizej)
             {
@@ -195,8 +200,8 @@ namespace BinaryDecisionDiagram
                     iZero++;
                 }
             }
-            Tabela splitted1 = new Tabela(howManyOnes, splittedWithOnes);
-            Tabela splitted2 = new Tabela(howManyZeroes, splittedWithZeroes);
+            Tabela splitted1 = new Tabela(howManyOnes, splittedWithOnes, tracking[pivot]+" TAK; ");
+            Tabela splitted2 = new Tabela(howManyZeroes, splittedWithZeroes, tracking[pivot]+ " NIE; ");
             return new Tabela[] { splitted1, splitted2 };
 
         }
@@ -235,6 +240,25 @@ namespace BinaryDecisionDiagram
         {
             for (int i = 0; i < 20; i++)
             {
+                for (int j = 0; j < columns; j++)
+                {
+                    Console.Write(tabelka[i, j]);
+                }
+                if (i == 15)
+                {
+                    Console.WriteLine();
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
+        }
+        public void PrintFinalTab()
+        {
+            string[] questions = new string[20] { "Towarzysz obecny TAK: ", "Towarzysz obecny NIE: ", "pogoda SLONCE:        ", "pogoda DESZCZ:        ", "pogoda SNIEG:         ", "kondycja SLABA:       ", "kondycja SREDNIA:     ", "kondycja DOBRA:       ", "temp <-10:            ", "temp -10-10:          ", "temp 10-20:           ", "temp >20:             ", "wiek <10:             ", "wiek 10-18:           ", "wiek 18-40:           ", "wiek >40:             ", "szlak CZERWONY:       ", "szlak NIEBIESKI:      ", "szlak ZIELONY:        ", "szlak CZARNY:         " };
+
+            for (int i = 0; i < 20; i++)
+            {
+                Console.Write(questions[i]);
                 for (int j = 0; j < columns; j++)
                 {
                     Console.Write(tabelka[i, j]);

@@ -11,6 +11,7 @@ namespace BinaryDecisionDiagram
         public int layer, myNumber;
         public static int number=0;
         public string name;
+        public string tracking = "";
         public Tabela tabela;
         public Node parent;
         public List<Node> children;
@@ -41,7 +42,7 @@ namespace BinaryDecisionDiagram
             this.layer = parent.layer + 1;
             number++;
             myNumber = number;
-            
+            this.children = children;
             this.name = "Node" + layer.ToString() + "," + number.ToString();
             this.parent = parent;
         }
@@ -67,6 +68,29 @@ namespace BinaryDecisionDiagram
             Console.WriteLine(String.Format("node from layer {0}, numer {1}, name {2}", layer, myNumber, name));
             tabela.PrintTab();
             Console.WriteLine();
+
+        }
+
+        public void PrintFinalInfo()
+        {
+            Console.WriteLine();
+            Console.WriteLine(String.Format("node from layer {0}, numer {1}, name {2}", layer, myNumber, name));
+            Node trackedNode = this;
+            while (trackedNode.parent!=null)
+            {
+                tracking += trackedNode.tabela.trackingData;
+                trackedNode = trackedNode.parent;
+            }
+            Console.WriteLine("route: " + tracking);
+            tabela.PrintFinalTab();
+            Console.WriteLine();
+
+        }
+
+        public void DrawTree()
+        {
+
+
 
         }
 

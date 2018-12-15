@@ -21,8 +21,9 @@ namespace BinaryDecisionDiagram
             firstTab.Generate(); //generuje iloczyn kartezjanski przeslanek i wczytuje wartosci konkluzji
             Node root = new Node(firstTab);           
             root.GenerateChildren();
+            nodes.Add(root);
             nodes.AddRange(root.children);
-            int i = 0;
+            int i = 1;
             do
             {
                 nodes[i].GenerateChildren();
@@ -32,7 +33,7 @@ namespace BinaryDecisionDiagram
 
             foreach (var item in Node.leaves)
             {
-                item.PrintInfo();
+                item.PrintFinalInfo();
             }
 
             //do

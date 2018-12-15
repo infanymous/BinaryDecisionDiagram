@@ -56,7 +56,7 @@ namespace BinaryDecisionDiagram
                 leaves.Add(this);
                 return;
             }
-            PrintInfo();
+            //PrintInfo();
             this.children.Add(new Node(children[0], this, new List<Node>()));
             this.children.Add(new Node(children[1], this, new List<Node>()));
         }

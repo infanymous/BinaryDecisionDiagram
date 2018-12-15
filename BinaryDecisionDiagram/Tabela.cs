@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace BinaryDecisionDiagram
 {
     class Tabela
     {
+        public static int splitNumber = 0;
         int columns = 288, rows = 20;
         public int[,] tabelka;
         public int[] conditionNumbers;
@@ -85,28 +87,47 @@ namespace BinaryDecisionDiagram
 
             tabelka = new int[rows, size];
             tabelka = tab;
-            SetRandomConclusions();
+            SetConclusions();
         }
 
-        private void SetRandomConclusions()
+        private void SetConclusions()
         {
-            Random rnd = new Random();
-            for (int i = 0; i < 288; i++)
-            {
-                int row = rnd.Next(16, 20);
-                tabelka[row, i] = 1; 
-            }
-            //for (int i = 0; i < 20; i++)
+            //Random rnd = new Random();
+            //for (int i = 0; i < 288; i++)
             //{
-            //    for (int j = 0; j < 170; j++)
-            //    {
-            //        Console.Write(tabelka[i, j]);
-            //    }
-            //    Console.WriteLine();
+            //    int row = rnd.Next(16, 20);
+            //    tabelka[row, i] = 1;
             //}
+            string[] conclusionsFromTxt = new string[4];
+            int i = 0;
+            using (StreamReader reader = new StreamReader(@"conclusions.txt"))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    line = RemoveWhitespace(line);
+                    conclusionsFromTxt[i] = line;
+                    i++;
+                    //Console.WriteLine(line);
+                }
+            }
+            for (int j = 0; j < conclusionsFromTxt.Length; j++)
+            {
+                for (int k = 0; k < tabelka.GetLength(1); k++)
+                {
+                    tabelka[rows - 4 + j, k] = (int)conclusionsFromTxt[j][k] == 48 ? 0 : 1;
+                }
+            }
+
         }
         #endregion
 
+        public static string RemoveWhitespace(string input)
+        {
+            return new string(input.ToCharArray()
+                .Where(c => !Char.IsWhiteSpace(c))
+                .ToArray());
+        }
 
         public Tabela[] SplitDataByRow(int pivot)
         {
@@ -265,6 +286,10 @@ namespace BinaryDecisionDiagram
 
         public double Entropy(int n1, int n)
         {
+            if (n1==0)
+            {
+                return 0.0;
+            }
             return (-(double)n1 / (double)n * Math.Log((double)n1 / (double)n, 2));
         }
         }

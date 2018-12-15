@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace BinaryDecisionDiagram
@@ -10,20 +11,23 @@ namespace BinaryDecisionDiagram
     {
         static void Main(string[] args)
         {
-            Tabela g = new Tabela();
+            Console.SetWindowSize(190, 35);
+            Tabela firstTab = new Tabela();
             int pivot = 0;
             double maxValue = 0.0;
 
-            g.Generate(); //generuje iloczyn kartezjanski przeslanek i randomowe wartosci konkluzji
-            g.FindQuantities(); //znajduje ile jest kolumn z kazda konkluzja
-            g.PrintTab(150);
-            g.SetI();
+            firstTab.Generate(); //generuje iloczyn kartezjanski przeslanek i wczytuje wartosci konkluzji
 
-            double[] entropies = new double[g.tabelka.GetLength(0) - 4];
+
+            firstTab.FindQuantities(); //znajduje ile jest kolumn z kazda konkluzja
+            firstTab.PrintTab(150);
+            firstTab.SetI();
+
+            double[] entropies = new double[firstTab.tabelka.GetLength(0) - 4];
             for (int i = 0; i < entropies.Length; i++)
             {
-                entropies[i] = g.GetEntropyForRow(i)[2];
-                if (maxValue<entropies[i])
+                entropies[i] = firstTab.GetEntropyForRow(i)[2];
+                if (maxValue < entropies[i])
                 {
                     pivot = i;
                     maxValue = entropies[i];
@@ -34,10 +38,29 @@ namespace BinaryDecisionDiagram
             Console.WriteLine();
             Console.WriteLine(pivot);
 
-            Tabela[] firstsplit = g.SplitDataByRow(pivot);
+            Tabela[] firstsplit = firstTab.SplitDataByRow(pivot);
+            firstsplit[0].FindQuantities();
+            firstsplit[0].SetI();
+            firstsplit[0].PrintTab(firstsplit[0].tabelka.GetLength(1));
+            entropies = new double[firstsplit[0].tabelka.GetLength(0) - 4];
+            pivot = 0; maxValue = 0.0;
+            for (int i = 0; i < entropies.Length; i++)
+            {
+                entropies[i] = firstsplit[0].GetEntropyForRow(i)[2];
+                if (maxValue < entropies[i])
+                {
+                    pivot = i;
+                    maxValue = entropies[i];
+                }
 
-            firstsplit[0].PrintTab(30);
-            firstsplit[1].PrintTab(30);
+                Console.WriteLine(entropies[i]);
+            }
+            Console.WriteLine();
+            Console.WriteLine(pivot);
+            Tabela[] secondsplit = firstsplit[0].SplitDataByRow(pivot);
+            secondsplit[0].PrintTab(secondsplit[0].tabelka.GetLength(1));
+            secondsplit[1].PrintTab(secondsplit[1].tabelka.GetLength(1));
+            //firstsplit[1].PrintTab(30);
 
         }
     }

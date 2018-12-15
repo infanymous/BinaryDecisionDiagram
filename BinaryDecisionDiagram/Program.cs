@@ -13,53 +13,95 @@ namespace BinaryDecisionDiagram
         {
             Console.SetWindowSize(190, 35);
             Tabela firstTab = new Tabela();
-            int pivot = 0;
-            double maxValue = 0.0;
-
+            List<Node> nodes = new List<Node>();
+            List<string> konkluzje = new List<string>();
+            //int pivot = 0;
+            //double maxValue = 0.0;
+            //double[] entropies;
             firstTab.Generate(); //generuje iloczyn kartezjanski przeslanek i wczytuje wartosci konkluzji
-
-
-            firstTab.FindQuantities(); //znajduje ile jest kolumn z kazda konkluzja
-            firstTab.PrintTab(150);
-            firstTab.SetI();
-
-            double[] entropies = new double[firstTab.tabelka.GetLength(0) - 4];
-            for (int i = 0; i < entropies.Length; i++)
+            Node root = new Node(firstTab);           
+            root.GenerateChildren();
+            nodes.AddRange(root.children);
+            int i = 0;
+            do
             {
-                entropies[i] = firstTab.GetEntropyForRow(i)[2];
-                if (maxValue < entropies[i])
-                {
-                    pivot = i;
-                    maxValue = entropies[i];
-                }
+                nodes[i].GenerateChildren();
+                nodes.AddRange(nodes[i].children);
+                i++;
+            } while (i<nodes.Count());
 
-                Console.WriteLine(entropies[i]);
-            }
-            Console.WriteLine();
-            Console.WriteLine(pivot);
-
-            Tabela[] firstsplit = firstTab.SplitDataByRow(pivot);
-            firstsplit[0].FindQuantities();
-            firstsplit[0].SetI();
-            firstsplit[0].PrintTab(firstsplit[0].tabelka.GetLength(1));
-            entropies = new double[firstsplit[0].tabelka.GetLength(0) - 4];
-            pivot = 0; maxValue = 0.0;
-            for (int i = 0; i < entropies.Length; i++)
+            foreach (var item in Node.leaves)
             {
-                entropies[i] = firstsplit[0].GetEntropyForRow(i)[2];
-                if (maxValue < entropies[i])
-                {
-                    pivot = i;
-                    maxValue = entropies[i];
-                }
-
-                Console.WriteLine(entropies[i]);
+                item.PrintInfo();
             }
-            Console.WriteLine();
-            Console.WriteLine(pivot);
-            Tabela[] secondsplit = firstsplit[0].SplitDataByRow(pivot);
-            secondsplit[0].PrintTab(secondsplit[0].tabelka.GetLength(1));
-            secondsplit[1].PrintTab(secondsplit[1].tabelka.GetLength(1));
+
+            //do
+            //{
+            //    if (Node.number == 0)
+            //    {
+            //        root.tabela.FindQuantities();
+            //        root.tabela.PrintTab(root.tabela.tabelka.GetLength(1) / 2);
+            //        root.tabela.SetI();
+            //        entropies = new double[root.tabela.tabelka.GetLength(0) - 4];
+            //        for (int i = 0; i < entropies.Length; i++)
+            //        {
+            //            entropies[i] = firstTab.GetEntropyForRow(i)[2];
+            //            if (maxValue < entropies[i])
+            //            {
+            //                pivot = i;
+            //                maxValue = entropies[i];
+            //            }
+
+            //            Console.WriteLine(entropies[i]);
+            //        }
+            //        Console.WriteLine();
+            //        Console.WriteLine(pivot);
+            //        nodes.Add(new Node(root.tabela.SplitDataByRow(pivot)[0], root,));
+            //    }
+
+            //} while (true);
+
+            //firstTab.FindQuantities(); //znajduje ile jest kolumn z kazda konkluzja
+            //firstTab.PrintTab(150);
+            //firstTab.SetI();
+            //double[] entropies = new double[firstTab.tabelka.GetLength(0) - 4];
+
+            //for (int i = 0; i < entropies.Length; i++)
+            //{
+            //    entropies[i] = firstTab.GetEntropyForRow(i)[2];
+            //    if (maxValue < entropies[i])
+            //    {
+            //        pivot = i;
+            //        maxValue = entropies[i];
+            //    }
+
+            //    Console.WriteLine(entropies[i]);
+            //}
+            //Console.WriteLine();
+            //Console.WriteLine(pivot);
+
+            //Tabela[] firstsplit = firstTab.SplitDataByRow();
+            //firstsplit[0].FindQuantities();
+            //firstsplit[0].SetI();
+            //firstsplit[0].PrintTab(firstsplit[0].tabelka.GetLength(1));
+            //entropies = new double[firstsplit[0].tabelka.GetLength(0) - 4];
+            //pivot = 0; maxValue = 0.0;
+            //for (int i = 0; i < entropies.Length; i++)
+            //{
+            //    entropies[i] = firstsplit[0].GetEntropyForRow(i)[2];
+            //    if (maxValue < entropies[i])
+            //    {
+            //        pivot = i;
+            //        maxValue = entropies[i];
+            //    }
+
+            //    Console.WriteLine(entropies[i]);
+            //}
+            //Console.WriteLine();
+            //Console.WriteLine(pivot);
+            //Tabela[] secondsplit = firstsplit[0].SplitDataByRow(pivot);
+            //secondsplit[0].PrintTab(secondsplit[0].tabelka.GetLength(1));
+            //secondsplit[1].PrintTab(secondsplit[1].tabelka.GetLength(1));
             //firstsplit[1].PrintTab(30);
 
         }

@@ -129,9 +129,36 @@ namespace BinaryDecisionDiagram
                 .ToArray());
         }
 
-        public Tabela[] SplitDataByRow(int pivot)
+        public Tabela[] SplitDataByRow()
         {
-            int howManyOnes = 0, howManyZeroes = 0;
+            FindQuantities();
+            SetI();
+            double[] entropies = new double[rows - 4];
+            int howManyOnes = 0, howManyZeroes = 0, pivot = 0;
+            double maxValue = 0.0;
+            if (CheckEnd())
+            {
+                return null;
+            }
+
+            for (int i = 0; i < entropies.Length; i++)
+            {
+                entropies[i] = GetEntropyForRow(i)[2];
+                if (maxValue < entropies[i])
+                {
+                    pivot = i;
+                    maxValue = entropies[i];
+                }
+
+                Console.WriteLine(entropies[i]);
+            }
+            Console.WriteLine();
+            Console.WriteLine(pivot);
+
+            if (maxValue == 0)
+            {
+                pivot = 2;  
+            }
 
             for (int i = 0; i < columns; i++)//ten for jest tu tylko po to, zeby policzyc ile jest kolumn z wartoscia 1 dla wybranego warunku (zeby zadeklarowac tablice o odpowiednim rozmiarze tuz ponizej)
             {
@@ -171,30 +198,55 @@ namespace BinaryDecisionDiagram
             Tabela splitted1 = new Tabela(howManyOnes, splittedWithOnes);
             Tabela splitted2 = new Tabela(howManyZeroes, splittedWithZeroes);
             return new Tabela[] { splitted1, splitted2 };
-            ////printfy dla testu
-            //for (int i = 0; i < rows; i++)
-            //{
-            //    for (int j = 0; j < howManyOnes/2; j++)
-            //    {
-            //        Console.Write(splittedWithOnes[i, j]);
-            //    }
-            //    Console.WriteLine();
-            //}
-            //Console.WriteLine();
-            //Console.WriteLine();
-            ////printfy dla testu
-            //for (int i = 0; i < rows; i++)
-            //{
-            //    for (int j = 0; j < howManyZeroes/2; j++)
-            //    {
-            //        Console.Write(splittedWithZeroes[i, j]);
-            //    }
-            //    Console.WriteLine();
-            //}
-            //Console.WriteLine();
 
         }
 
+        private bool CheckEnd()
+        {
+            int sum1 = 0, sum2 = 0, sum3 = 0, sum4 = 0;
+
+            for (int i = 0; i < tabelka.GetLength(1); i++)
+            {
+                if (tabelka[rows-4,i]==1)
+                {
+                    sum1++;
+                }
+                else if (tabelka[rows - 3, i] == 1)
+                {
+                    sum2++;
+                }
+                else if (tabelka[rows - 2, i] == 1)
+                {
+                    sum3++;
+                }
+                else if (tabelka[rows - 1, i] == 1)
+                {
+                    sum4++;
+                }
+            }
+            if (sum1 == tabelka.GetLength(1) || sum2 == tabelka.GetLength(1) || sum3 == tabelka.GetLength(1) || sum4 == tabelka.GetLength(1))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public void PrintTab()
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    Console.Write(tabelka[i, j]);
+                }
+                if (i == 15)
+                {
+                    Console.WriteLine();
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
+        }
         public void PrintTab(int cols)
         {
             for (int i = 0; i < 20; i++)

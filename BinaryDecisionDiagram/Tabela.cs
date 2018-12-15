@@ -10,6 +10,8 @@ namespace BinaryDecisionDiagram
     {
         int columns = 288, rows = 20;
         public int[,] tabelka;
+        public int[] conditionNumbers;
+
         public int n, n1, n2, n3, n4;
         public double I;
         
@@ -32,6 +34,8 @@ namespace BinaryDecisionDiagram
             tabelka = values;
         }
 
+
+        #region funkcje startowe: iloczyn kartezjanski + randomowe konkluzje
         public void Generate()
         {
             int towarzysz = 2, pogoda = 3, kondycja = 3, temperatura = 4, wiek = 4; //rozmiar przeslanki (np. tak/nie -> 2)
@@ -101,33 +105,73 @@ namespace BinaryDecisionDiagram
             //    Console.WriteLine();
             //}
         }
+        #endregion
 
-        public int CountWantedColumns(int desiredRow, bool plusOrMinus)
+
+        public Tabela[] SplitDataByRow(int pivot)
         {
-            int cols = 0;
-            if (plusOrMinus)
-            {
-                for (int i = 0; i < tabelka.GetLength(1); i++)
-                {
-                    if (tabelka[desiredRow, i] == 1)
-                    {
-                        cols++;
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < tabelka.GetLength(1); i++)
-                {
-                    if (tabelka[desiredRow, i] == 0)
-                    {
-                        cols++;
-                    }
-                }
-            }
-            
+            int howManyOnes = 0, howManyZeroes = 0;
 
-            return cols;
+            for (int i = 0; i < columns; i++)//ten for jest tu tylko po to, zeby policzyc ile jest kolumn z wartoscia 1 dla wybranego warunku (zeby zadeklarowac tablice o odpowiednim rozmiarze tuz ponizej)
+            {
+                if (tabelka[pivot,i]==1)
+                {
+                    howManyOnes++;
+                }
+                else
+                {
+                    howManyZeroes++;
+                }
+            }
+
+            int[,] splittedWithOnes = new int[rows, howManyOnes];
+            int[,] splittedWithZeroes = new int[rows, howManyZeroes];
+
+            int iOne = 0, iZero = 0; //iteratory po tablicach splitted
+            for (int i = 0; i < columns; i++)
+            {
+                if (tabelka[pivot, i] == 1)
+                {
+                    for (int j = 0; j < rows; j++)
+                    {
+                        splittedWithOnes[j, iOne] = tabelka[j, i];
+                    }
+                    iOne++;
+                }
+                else
+                {
+                    for (int j = 0; j < rows; j++)
+                    {
+                        splittedWithZeroes[j, iZero] = tabelka[j, i];
+                    }
+                    iZero++;
+                }
+            }
+            Tabela splitted1 = new Tabela(howManyOnes, splittedWithOnes);
+            Tabela splitted2 = new Tabela(howManyZeroes, splittedWithZeroes);
+            return new Tabela[] { splitted1, splitted2 };
+            ////printfy dla testu
+            //for (int i = 0; i < rows; i++)
+            //{
+            //    for (int j = 0; j < howManyOnes/2; j++)
+            //    {
+            //        Console.Write(splittedWithOnes[i, j]);
+            //    }
+            //    Console.WriteLine();
+            //}
+            //Console.WriteLine();
+            //Console.WriteLine();
+            ////printfy dla testu
+            //for (int i = 0; i < rows; i++)
+            //{
+            //    for (int j = 0; j < howManyZeroes/2; j++)
+            //    {
+            //        Console.Write(splittedWithZeroes[i, j]);
+            //    }
+            //    Console.WriteLine();
+            //}
+            //Console.WriteLine();
+
         }
 
         public void PrintTab(int cols)
@@ -212,6 +256,11 @@ namespace BinaryDecisionDiagram
         public double GetEj(double entropyPlus, int countOnes, double entropyMinus, int countZeroes)
         {
             return (((double)countOnes / (double)columns) * entropyPlus + ((double)countZeroes / (double)columns) * entropyMinus);
+        }
+
+        public void SetI()
+        {
+            this.I = (Entropy(n1, n) + Entropy(n2, n) + Entropy(n3, n) + Entropy(n4, n));
         }
 
         public double Entropy(int n1, int n)
